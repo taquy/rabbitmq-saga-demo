@@ -24,8 +24,8 @@ public class Application {
 
 	@GetMapping
 	public String hi() {
-		String rk = ProducerConfig.rk;
-		String en = ProducerConfig.en;
+		String rk = ProducerConfig.r1;
+		String en = ProducerConfig.e1;
 		
 		Message msg = new Message("main.service", "orchestrator", "do transaction A-B", rk);
 		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);

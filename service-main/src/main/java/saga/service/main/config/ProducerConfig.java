@@ -12,23 +12,23 @@ import org.springframework.stereotype.Component;
 public class ProducerConfig {
 	
 	/**** QUEUE CONFIGURATION ***/
-	public static final String qn = "q1"; 	// queue name
-	public static final String rk = "r1"; // route key
-	public static final String en = "e1"; 	// exchange name
+	public static final String q1 = "Q1"; 	// queue name
+	public static final String e1 = "E1"; 	// exchange name
+	public static final String r1 = "R1"; // route key
 	
 	@Bean
 	Queue queue() {
-		return new Queue(qn, false);
+		return new Queue(q1);
 	}
 
 	@Bean
 	DirectExchange exchange() {
-		return new DirectExchange(en);
+		return new DirectExchange(e1);
 	}
 
 	@Bean
-	Binding binding(DirectExchange exchange, Queue queue) {
-		return BindingBuilder.bind(queue).to(exchange).with(rk);
+	Binding binding(DirectExchange exchange) {
+		return BindingBuilder.bind(queue()).to(exchange).with(r1);
 	}
 	
 	@Bean

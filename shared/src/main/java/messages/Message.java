@@ -9,6 +9,14 @@ public final class Message {
 	private boolean status;
 	private boolean isAsync;
 
+	public Message(String from, String to, String message) {
+		this.from = from;
+		this.to = to;
+		this.message = message;
+		this.status = false;
+		this.isAsync = false;
+	}
+	
 	public Message(String from, String to, String message, String route) {
 		this.from = from;
 		this.to = to;
