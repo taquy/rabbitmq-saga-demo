@@ -30,6 +30,36 @@ public class ProducerSubConfig {
 	private ConnectionFactory connectionFactory;
 
 	@Bean
+	DirectExchange exchange() {
+		return new DirectExchange(en);
+	}
+
+	// queue for requests
+	@Bean
+	Queue queueRq() {
+		return QueueBuilder.durable(qnrq).build();
+	}
+
+	// queue for responses
+	@Bean
+	Queue queueRp() {
+		return QueueBuilder.durable(qnrp).build();
+	}
+	
+	// bind queue for service A
+	@Bean
+	Binding bindA() {
+		return BindingBuilder.bind(queueRq()).to(exchange()).with(rka);
+	}
+	
+	// bind queue for service B
+	@Bean
+	Binding bindB() {
+		return BindingBuilder.bind(queueRq()).to(exchange()).with(rkb);
+	}
+	
+	// async rabbit template
+	@Bean
 	AsyncRabbitTemplate template() {
 		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
 		container.setQueueNames(qnrp);

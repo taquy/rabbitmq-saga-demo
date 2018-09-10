@@ -16,25 +16,25 @@ public class ProducerMainConfig {
 	public static final String qn = "q1"; // queue name
 	public static final String rk = "r1"; // route key
 	public static final String en = "e1"; // exchange name
-//
-//	@Bean
-//	Queue queue() {
-//		return new Queue(qn, false);
-//	}
-//
-//	@Bean
-//	TopicExchange exchange() {
-//		return new TopicExchange(en);
-//	}
-//
-//	@Bean
-//	Binding binding(TopicExchange exchange, Queue queue) {
-//		return BindingBuilder.bind(queue).to(exchange).with(rk);
-//	}
-//
-//	@Bean
-//	public Jackson2JsonMessageConverter jsonConverter() {
-//		return new Jackson2JsonMessageConverter();
-//	}
-//	
+
+	@Bean
+	Queue queue() {
+		return new Queue(qn, false);
+	}
+
+	@Bean
+	DirectExchange exchange() {
+		return new DirectExchange(en);
+	}
+
+	@Bean
+	Binding binding(DirectExchange exchange, Queue queue) {
+		return BindingBuilder.bind(queue).to(exchange).with(rk);
+	}
+
+	@Bean
+	public Jackson2JsonMessageConverter jsonConverter() {
+		return new Jackson2JsonMessageConverter();
+	}
+	
 }
