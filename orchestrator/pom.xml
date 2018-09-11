@@ -47,11 +47,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>saga.shared</groupId>
+			<artifactId>saga.shared</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>/home/taquy/Projects/Spring/demos/saga-2/shared/target/saga.shared-0.0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
 
 	</dependencies>
@@ -64,6 +72,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>

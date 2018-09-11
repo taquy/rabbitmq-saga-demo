@@ -1,4 +1,4 @@
-package messages;
+package saga.shared;
 
 public final class Message {
 	private long id;
@@ -16,7 +16,7 @@ public final class Message {
 		this.status = false;
 		this.isAsync = false;
 	}
-	
+
 	public Message(String from, String to, String message, String route) {
 		this.from = from;
 		this.to = to;
@@ -25,7 +25,7 @@ public final class Message {
 		this.status = false;
 		this.isAsync = false;
 	}
-	
+
 	public Message(String from, String to, String message, String route, boolean isAsync) {
 		this.from = from;
 		this.to = to;
@@ -85,7 +85,7 @@ public final class Message {
 	public void setRoute(String route) {
 		this.route = route;
 	}
-	
+
 	public boolean isAsync() {
 		return isAsync;
 	}

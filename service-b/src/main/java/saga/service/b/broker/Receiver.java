@@ -3,7 +3,7 @@ package saga.service.b.broker;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
-import messages.Message;
+import saga.shared.Message;
 
 @Service
 public class Receiver {
