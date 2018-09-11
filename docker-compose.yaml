@@ -1,0 +1,45 @@
+version: "3"
+services:
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    hostname: saga-message-broker
+    networks: [saga-2-net]
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+
+  service_orchestrator:
+    image: saga-2-orchestrator
+    depends_on:
+      - rabbitmq
+
+  service_main:
+    image: saga-2-service-main
+    depends_on:
+      - rabbitmq
+    networks: [saga-2-net]
+    ports:
+      - "8090:8090"
+
+  service_a:
+    image: saga-2-service-a
+    depends_on:
+      - rabbitmq
+    networks: [saga-2-net]
+
+  service_b:
+    image: saga-2-service-b
+    depends_on:
+      - rabbitmq
+    networks: [saga-2-net]
+
+networks:
+  saga-2-net:
+    driver: bridge
+
