@@ -6,13 +6,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    hostname: saga-message-broker
     networks: [saga-2-net]
-    environment:
-      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
-      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
 
   service_orchestrator:
     image: saga-2-orchestrator
