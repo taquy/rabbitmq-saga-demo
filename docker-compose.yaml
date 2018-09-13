@@ -6,37 +6,40 @@ services:
     container_name: rabbit
     ports:
       - 15672:15672
+      - 5672:5672
     environment:
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
-    networks: [saga-2-net]
+    # networks:
+      # - saga-2-net
+      # - host
 
-  service_main:
-    image: saga-2-service-main
-    depends_on:
-      - rabbitmq
-    ports:
-      - 8090:8090
-    networks: [saga-2-net]
+  # service_main:
+  #   image: saga-2-service-main
+  #   depends_on:
+  #     - rabbitmq
+  #   ports:
+  #     - 8090:8090
+  #   networks: [saga-2-net]
 
-  service_orchestrator:
-    image: saga-2-orchestrator
-    depends_on:
-      - rabbitmq
-      - service_main
-    networks: [saga-2-net]
+  # service_orchestrator:
+  #   image: saga-2-orchestrator
+  #   depends_on:
+  #     - rabbitmq
+  #     - service_main
+  #   networks: [saga-2-net]
 
-  service_a:
-    image: saga-2-service-a
-    depends_on:
-      - rabbitmq
-    networks: [saga-2-net]
+  # service_a:
+  #   image: saga-2-service-a
+  #   depends_on:
+  #     - rabbitmq
+  #   networks: [saga-2-net]
 
-  service_b:
-    image: saga-2-service-b
-    depends_on:
-      - rabbitmq
-    networks: [saga-2-net]
+  # service_b:
+  #   image: saga-2-service-b
+  #   depends_on:
+  #     - rabbitmq
+  #   networks: [saga-2-net]
 
 networks:
   saga-2-net:
