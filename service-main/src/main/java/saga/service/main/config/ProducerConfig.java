@@ -5,11 +5,14 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 public class ProducerConfig {
 	
 	/**** QUEUE CONFIGURATION ***/
@@ -30,6 +33,18 @@ public class ProducerConfig {
 	@Bean
 	Binding binding(DirectExchange exchange) {
 		return BindingBuilder.bind(queue()).to(exchange).with(r1);
+	}
+	
+	
+	@Autowired
+	ConnectionFactory factory;
+	
+	@Bean
+	public RabbitTemplate rabbitTemplate() {
+		RabbitTemplate tpl = new RabbitTemplate(factory);
+		tpl.setMessageConverter(jsonConverter());
+		tpl.setReplyTimeout(5L);
+		return tpl;
 	}
 	
 	@Bean
