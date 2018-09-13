@@ -26,6 +26,7 @@ public class BrokerConfig {
 	public Binding bindingA(DirectExchange direct, Queue queueA) {
 		return BindingBuilder.bind(queueA).to(direct).with("A");
 	}
+	
 	@Bean
 	public Receiver receiver() {
 		return new Receiver();
