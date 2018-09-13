@@ -6,7 +6,7 @@ services:
     container_name: rabbit
     ports:
       - 15672:15672
-      # - 5672:5672
+      # - 5672:5672 
     environment:
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
@@ -36,6 +36,7 @@ services:
     image: saga-2-service-a
     depends_on:
       - rabbitmq
+      - service_orchestrator
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     networks: [saga-2-net]
@@ -44,6 +45,7 @@ services:
     image: saga-2-service-b
     depends_on:
       - rabbitmq
+      - service_orchestrator
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     networks: [saga-2-net]
