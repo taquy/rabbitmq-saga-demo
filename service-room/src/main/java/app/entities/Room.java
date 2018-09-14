@@ -17,15 +17,11 @@ public class Room {
 	@Column(name = "seats_available")
 	private int seatsAvailable;
 	
-	@Column(name = "price")
-	private double price;
-
 	public Room() {
 	}
 
-	public Room(int seatsAvailable, double price) {
+	public Room(int seatsAvailable) {
 		this.seatsAvailable = seatsAvailable;
-		this.price = price;
 	}
 
 	public int getId() {
@@ -42,14 +38,6 @@ public class Room {
 
 	public void setSeatsAvailable(int seatsAvailable) {
 		this.seatsAvailable = seatsAvailable;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
 	}
 
 }
