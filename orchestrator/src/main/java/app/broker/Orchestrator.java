@@ -20,6 +20,8 @@ public class Orchestrator {
 	public Message reply(final Message msg) {
 		
 		Stack<Message> tasks = new Stack<Message>();
+		
+		Message task
 
 		Message taskA = new Message("orchestrator", "A", "AAA", "A");
 		Message taskB = new Message("orchestrator", "B", "BBB", "B");

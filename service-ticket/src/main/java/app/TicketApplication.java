@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.broker.BrokerConfig;
+import saga.dtos.BookingTicketDTO;
 import saga.shared.Message;
 
 @SpringBootApplication
@@ -23,14 +25,18 @@ public class TicketApplication {
 	private RabbitTemplate tpl;
 
 	@GetMapping
-	public String bookTicket() {
-		String rk = BrokerConfig.r1;
-		String en = BrokerConfig.e1;
+	public String bookingTicket(@RequestParam("user_id") int userId, @RequestParam("room_id") int roomId) {
+		String rk = BrokerConfig.r1; // route key
+		String en = BrokerConfig.e1; // router name
 		
-		Message msg = new Message("main.service", "orchestrator", "do transaction A-B", rk);
+		BookingTicketDTO dto = new BookingTicketDTO(userId, roomId);
+		int cmd = Message.COMMAND.BOOK_TICKET;
+		
+		Message msg = new Message(dto, cmd, rk);
 		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);
 		
-		return rsl.getMessage();
+		if (rsl.isDone()) return "success";
+		return "failed";
 	}
 	
 }
