@@ -11,9 +11,16 @@ public final class Message {
 	private boolean isDone;
 
 	public static final class COMMAND {
-		public static final int BOOK_TICKET = 0;
-		public static final int RESERVE_SEAT = 1;
-		public static final int MAKE_PAYMENT = 2;
+		// margin of commands: to identify safe gaps between command and its rollback command
+		public static final int MARGIN = 1000;
+		
+		public static final int BOOK_TICKET = MARGIN + 0;
+		public static final int RESERVE_SEAT = MARGIN + 1;
+		public static final int MAKE_PAYMENT = MARGIN + 2;
+		
+		public static final int BOOK_TICKET_ROLLBACK = BOOK_TICKET + MARGIN;
+		public static final int RESERVE_SEAT_ROLLBACK = RESERVE_SEAT + MARGIN;
+		public static final int MAKE_PAYMENT_ROLLBACK = MAKE_PAYMENT + MARGIN;
 	}
 
 	public Message(Object content, int command, String route) {
@@ -89,6 +96,10 @@ public final class Message {
 
 	public void setCommand(int command) {
 		this.command = command;
+	}
+	
+	public void setRollbackCommand(int command) {
+		this.command = command + COMMAND.MARGIN;
 	}
 
 }

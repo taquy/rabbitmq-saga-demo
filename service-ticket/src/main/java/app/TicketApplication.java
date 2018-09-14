@@ -29,10 +29,15 @@ public class TicketApplication {
 		String rk = BrokerConfig.r1; // route key
 		String en = BrokerConfig.e1; // router name
 		
-		BookingTicketDTO dto = new BookingTicketDTO(userId, roomId);
-		int cmd = Message.COMMAND.BOOK_TICKET;
+		// default ticket cost for demo
+		double ticketCost = 10;
 		
+		// construct message
+		BookingTicketDTO dto = new BookingTicketDTO(userId, roomId, ticketCost);
+		int cmd = Message.COMMAND.BOOK_TICKET;
 		Message msg = new Message(dto, cmd, rk);
+		
+		// send request - initiate transaction
 		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);
 		
 		if (rsl.isDone()) return "success";
