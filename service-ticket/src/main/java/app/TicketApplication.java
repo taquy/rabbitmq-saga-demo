@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import app.broker.BrokerConfig;
 import saga.dtos.BookingTicketDTO;
 import saga.shared.Message;
@@ -34,15 +37,22 @@ public class TicketApplication {
 		
 		// construct message
 		BookingTicketDTO dto = new BookingTicketDTO(userId, roomId, ticketCost);
-		Message<BookingTicketDTO> msg = new Message<BookingTicketDTO>(dto, Message.COMMAND.BOOK_TICKET, rk);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String content;
 		
+		try {
+			content = objectMapper.writeValueAsString(dto);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return "failed";
+		}
 		
-		// send request - initiate transaction
-		System.out.println("Start booking ticket transaction");
-		Message<BookingTicketDTO> rsl = (Message<BookingTicketDTO>) tpl.convertSendAndReceive(en, rk, msg);
+		Message msg = new Message(content, Message.COMMAND.BOOK_TICKET, rk);
+		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);
 		
 		if (rsl == null || !rsl.isDone()) return "failed";
 		return "success";
+		
 	}
 	
 }

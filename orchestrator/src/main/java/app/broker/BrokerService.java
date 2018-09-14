@@ -20,16 +20,16 @@ public class BrokerService {
 	private DirectExchange direct;
 
 	@Scheduled(fixedDelay = 1000, initialDelay = 500)
-	public Message<?> sendSync(Message<?> message) {
+	public Message sendSync(Message message) {
 
 		String route = message.getRoute();
 
-		return (Message<?>) template.convertSendAndReceive(direct.getName(), route, message);
+		return (Message) template.convertSendAndReceive(direct.getName(), route, message);
 
 	}
 
 	@Scheduled(fixedDelay = 1000L)
-	public RabbitConverterFuture<Message<?>> sendAsync(Message<?> message) {
+	public RabbitConverterFuture<Message> sendAsync(Message message) {
 
 		String route = message.getRoute();
 

@@ -16,11 +16,9 @@ public class Receiver {
 	private RoomService roomService;
 
 	@RabbitListener(queues = "#{queueA.name}")
-	public Message<Integer> executor(Message<Integer> msg) {
+	public Message executor(Message msg) {
 
 		if (msg.getCommand() == Message.COMMAND.RESERVE_SEAT) {
-			
-			System.out.println("Received command: " + msg.getId());
 			
 			Integer roomId = (Integer) msg.getContent();
 

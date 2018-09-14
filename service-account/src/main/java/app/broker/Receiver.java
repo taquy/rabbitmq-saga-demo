@@ -18,7 +18,7 @@ public class Receiver {
 	private BudgetService budgetService;
 
 	@RabbitListener(queues = "#{queueB.name}")
-	public Message<BookingTicketDTO> executor(Message<BookingTicketDTO> msg) {
+	public Message executor(Message msg) {
 
 		if (msg.getCommand() == Message.COMMAND.MAKE_PAYMENT) {
 			
