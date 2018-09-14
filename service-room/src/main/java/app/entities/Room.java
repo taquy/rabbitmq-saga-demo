@@ -1,14 +1,23 @@
 package app.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Room {
 
 	@Id
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "room_id")
+	private int roomId;
+	
+	@Column(name = "seats_available")
 	private int seatsAvailable;
+	
+	@Column(name = "price")
 	private double price;
 
 	public Room() {

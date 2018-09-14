@@ -1,12 +1,24 @@
 package app.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Account {
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "account_id")
+	private int accountId;
+	
+	@Column(name = "user_id")
 	private int userId;
-	private int deposit;
+	
+	@Column(name = "deposit")
+	private int deposit = 0;
 
 	public Account() {
 	}
