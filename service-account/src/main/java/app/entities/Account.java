@@ -18,7 +18,7 @@ public class Account {
 	private int userId;
 	
 	@Column(name = "deposit")
-	private int deposit = 0;
+	private double deposit = 0;
 
 	public Account() {
 	}
@@ -28,20 +28,20 @@ public class Account {
 		this.deposit = deposit;
 	}
 
-	public int getUser_id() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUser_id(int user_id) {
-		this.userId = user_id;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
-	public int getDeposit() {
+	public double getDeposit() {
 		return deposit;
 	}
 
-	public void setDeposit(int deposit) {
-		this.deposit = deposit;
+	public void setDeposit(double subtraction) {
+		this.deposit = subtraction;
 	}
 
 }
