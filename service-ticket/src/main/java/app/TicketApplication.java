@@ -12,8 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.broker.BrokerConfig;
+import saga.core.Message;
 import saga.dtos.BookingTicketDTO;
-import saga.shared.Message;
 
 @SpringBootApplication
 @RestController

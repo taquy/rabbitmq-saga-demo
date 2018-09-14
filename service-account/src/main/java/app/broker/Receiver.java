@@ -1,5 +1,7 @@
 package app.broker;
 
+import java.io.IOException;
+
 import javax.security.auth.login.AccountNotFoundException;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -8,8 +10,9 @@ import org.springframework.stereotype.Service;
 
 import app.exceptions.InsufficientBudgetException;
 import app.services.BudgetService;
+import saga.core.Message;
+import saga.core.SagaConverter;
 import saga.dtos.BookingTicketDTO;
-import saga.shared.Message;
 
 @Service
 public class Receiver {
@@ -18,13 +21,13 @@ public class Receiver {
 	private BudgetService budgetService;
 
 	@RabbitListener(queues = "#{queueB.name}")
-	public Message executor(Message msg) {
+	public Message executor(Message msg) throws IOException {
 
 		if (msg.getCommand() == Message.COMMAND.MAKE_PAYMENT) {
 			
 			System.out.println("Received command: " + msg.getId());
 
-			BookingTicketDTO ticketDto = (BookingTicketDTO) msg.getContent();
+			BookingTicketDTO ticketDto = SagaConverter.decode(msg.getContent(), BookingTicketDTO.class);
 
 			try {
 				budgetService.withdrawn(ticketDto.getUserId(), ticketDto.getTicketCost());

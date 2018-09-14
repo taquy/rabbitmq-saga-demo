@@ -1,5 +1,6 @@
 package app.broker;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import saga.core.Message;
+import saga.core.SagaConverter;
 import saga.dtos.BookingTicketDTO;
-import saga.shared.Message;
 
 @Component
-@SuppressWarnings("rawtypes")
 public class Orchestrator {
 
 	@Autowired
@@ -53,15 +54,13 @@ public class Orchestrator {
 	}
 
 	@RabbitListener(queues = "Q1")
-	public Message reply(Message<BookingTicketDTO> msg) {
-		
-		
+	public Message reply(Message msg) throws IOException {
 		
 		boolean isFailed = false; // transaction status
 
 		if (msg.getCommand() == Message.COMMAND.BOOK_TICKET) {
-
-			BookingTicketDTO ticketDto = (BookingTicketDTO) msg.getContent();
+			
+			BookingTicketDTO ticketDto = SagaConverter.decode(msg.getContent(), BookingTicketDTO.class);
 			
 			System.out.println("Received request: " + ticketDto);
 			
@@ -71,8 +70,8 @@ public class Orchestrator {
 			int totalTasks = 0;
 
 			// define tasks
-			Message task1 = new Message<Integer>(ticketDto.getRoomId(), Message.COMMAND.RESERVE_SEAT, "room-route");
-			Message task2 = new Message<BookingTicketDTO>(ticketDto, Message.COMMAND.MAKE_PAYMENT, "account-route");
+			Message task1 = new Message(msg.getContent(), Message.COMMAND.RESERVE_SEAT, "room-route");
+			Message task2 = new Message(msg.getContent(), Message.COMMAND.MAKE_PAYMENT, "account-route");
 
 			// push tasks to to-do stack
 			tasks.push(task1);
@@ -91,8 +90,7 @@ public class Orchestrator {
 
 					if (processes.size() > 0) {
 
-						// continuously tracking asynchronous processes status, stop until no processes
-						// left to track
+						// continuously tracking asynchronous processes status, stop until no processes, left to track
 
 						Iterator<Process> iterator = processes.iterator();
 						while (iterator.hasNext()) {

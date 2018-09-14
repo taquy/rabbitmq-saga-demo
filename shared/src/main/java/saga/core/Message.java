@@ -1,4 +1,4 @@
-package saga.shared;
+package saga.core;
 
 import java.util.UUID;
 
@@ -62,7 +62,7 @@ public final class Message {
 		this.id = id;
 	}
 
-	public Object getContent() {
+	public String getContent() {
 		return content;
 	}
 
