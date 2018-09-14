@@ -1,13 +1,12 @@
-package saga.orchestrator;
+package app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OrchestratorApplication {
-	
+public class ServiceAApplication {
+
 	public static void main(String[] args) {
-		SpringApplication.run(OrchestratorApplication.class, args);
+		SpringApplication.run(ServiceAApplication.class, args);
 	}
-	
 }

@@ -1,4 +1,4 @@
-package saga.service.a.broker;
+package app.broker;
 
 import org.springframework.amqp.core.AnonymousQueue;
 import org.springframework.amqp.core.Binding;
@@ -18,15 +18,14 @@ public class BrokerConfig {
 	}
 
 	@Bean
-	public Queue queueA() {
+	public Queue queueB() {
 		return new AnonymousQueue();
 	}
 
 	@Bean
-	public Binding bindingA(DirectExchange direct, Queue queueA) {
-		return BindingBuilder.bind(queueA).to(direct).with("A");
+	public Binding bindingB(DirectExchange direct, Queue queueB) {
+		return BindingBuilder.bind(queueB).to(direct).with("B");
 	}
-	
 	@Bean
 	public Receiver receiver() {
 		return new Receiver();

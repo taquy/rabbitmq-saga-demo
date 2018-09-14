@@ -1,4 +1,4 @@
-package saga.service.b.broker;
+package app.broker;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;

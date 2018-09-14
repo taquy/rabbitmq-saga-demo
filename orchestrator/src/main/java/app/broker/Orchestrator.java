@@ -1,4 +1,6 @@
-package saga.orchestrator.brokers;
+package app.broker;
+
+import java.util.Stack;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,12 @@ import saga.shared.Message;
 public class Orchestrator {
 
 	@Autowired
-	private Producer producer;
+	private BrokerService producer;
 
 	@RabbitListener(queues = "Q1")
 	public Message reply(final Message msg) {
+		
+		Stack<Message> tasks = new Stack<Message>();
 
 		Message taskA = new Message("orchestrator", "A", "AAA", "A");
 		Message taskB = new Message("orchestrator", "B", "BBB", "B");

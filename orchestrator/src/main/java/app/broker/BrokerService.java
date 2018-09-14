@@ -1,4 +1,4 @@
-package saga.orchestrator.brokers;
+package app.broker;
 
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import saga.shared.Message;
 
-public class Producer {
+public class BrokerService {
 	@Autowired
 	private RabbitTemplate template;
 

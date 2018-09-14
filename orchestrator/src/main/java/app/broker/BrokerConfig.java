@@ -1,4 +1,4 @@
-package saga.orchestrator.config;
+package app.broker;
 
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
@@ -11,8 +11,6 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import saga.orchestrator.brokers.Producer;
-
 @Configuration
 public class BrokerConfig {
 
@@ -22,8 +20,8 @@ public class BrokerConfig {
 	}
 
 	@Bean
-	public Producer sender() {
-		return new Producer();
+	public BrokerService sender() {
+		return new BrokerService();
 	}
 
 	@Bean

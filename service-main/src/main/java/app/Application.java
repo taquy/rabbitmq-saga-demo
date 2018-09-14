@@ -1,4 +1,4 @@
-package saga.service.main;
+package app;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import saga.service.main.config.ProducerConfig;
+import app.broker.BrokerConfig;
 import saga.shared.Message;
 
 @SpringBootApplication
@@ -24,8 +24,8 @@ public class Application {
 
 	@GetMapping
 	public String hi() {
-		String rk = ProducerConfig.r1;
-		String en = ProducerConfig.e1;
+		String rk = BrokerConfig.r1;
+		String en = BrokerConfig.e1;
 		
 		Message msg = new Message("main.service", "orchestrator", "do transaction A-B", rk);
 		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);
