@@ -2,9 +2,9 @@ package saga.shared;
 
 import java.util.UUID;
 
-public final class Message {
+public final class Message<T> {
 	private String id;
-	private Object content;
+	private T content;
 	private int command;
 	private String route;
 	private boolean isAsync;
@@ -22,8 +22,12 @@ public final class Message {
 		public static final int RESERVE_SEAT_ROLLBACK = RESERVE_SEAT + MARGIN;
 		public static final int MAKE_PAYMENT_ROLLBACK = MAKE_PAYMENT + MARGIN;
 	}
+	
+	public Message() {
+		
+	}
 
-	public Message(Object content, int command, String route) {
+	public Message(T content, int command, String route) {
 		this.id = genId();
 
 		this.content = content;
@@ -34,7 +38,7 @@ public final class Message {
 		this.isDone = false;
 	}
 	
-	public Message(Object content, int command, String route, boolean isAsync) {
+	public Message(T content, int command, String route, boolean isAsync) {
 		this.id = genId();
 
 		this.content = content;
@@ -62,7 +66,7 @@ public final class Message {
 		return content;
 	}
 
-	public void setContent(Object content) {
+	public void setContent(T content) {
 		this.content = content;
 	}
 

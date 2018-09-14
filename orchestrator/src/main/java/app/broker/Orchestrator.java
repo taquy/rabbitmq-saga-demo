@@ -2,6 +2,7 @@ package app.broker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -33,7 +34,7 @@ public class Orchestrator {
 
 		@Override
 		public void onSuccess(Message result) {
-			
+
 			this.result = result;
 
 			if (result.isDone()) {
@@ -58,7 +59,7 @@ public class Orchestrator {
 
 		if (msg.getCommand() == Message.COMMAND.BOOK_TICKET) {
 
-			BookingTicketDTO ticketDto = (BookingTicketDTO) msg.getContent();
+			LinkedHashMap ticketDto = (LinkedHashMap) msg.getContent();
 
 			/*** EXECUTE BOOKING TICKET TRANSACTION ***/
 			Stack<Message> tasks = new Stack<Message>(); // to-do stack
@@ -66,7 +67,7 @@ public class Orchestrator {
 			int totalTasks = 0;
 
 			// define tasks
-			Message task1 = new Message(ticketDto.getRoomId(), Message.COMMAND.RESERVE_SEAT, "room-route", true);
+			Message task1 = new Message(ticketDto.get("roomId"), Message.COMMAND.RESERVE_SEAT, "room-route", true);
 			Message task2 = new Message(ticketDto, Message.COMMAND.MAKE_PAYMENT, "account-route", true);
 
 			// push tasks to to-do stack
@@ -85,24 +86,24 @@ public class Orchestrator {
 				if (tasks.isEmpty()) {
 
 					if (processes.size() > 0) {
-						
+
 						// continuously tracking asynchronous processes status, stop until no processes
 						// left to track
-						
+
 						Iterator<Process> iterator = processes.iterator();
 						while (iterator.hasNext()) {
 							Process process = iterator.next();
-							
+
 							if (process.result != null || !process.status) {
-								
+
 								if (!process.status) {
-									 isFailed = true;
+									isFailed = true;
 								}
-								
+
 								iterator.remove();
-								
+
 							}
-							
+
 						}
 
 						continue;
