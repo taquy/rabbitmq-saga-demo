@@ -43,7 +43,7 @@ public class BrokerConfig {
 	public RabbitTemplate rabbitTemplate() {
 		RabbitTemplate tpl = new RabbitTemplate(factory);
 		tpl.setMessageConverter(jsonConverter());
-		tpl.setReplyTimeout(5L);
+		tpl.setReplyTimeout(5000L);
 		return tpl;
 	}
 	

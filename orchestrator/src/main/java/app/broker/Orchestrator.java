@@ -2,7 +2,6 @@ package app.broker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -15,11 +14,12 @@ import saga.dtos.BookingTicketDTO;
 import saga.shared.Message;
 
 @Component
+@SuppressWarnings("rawtypes")
 public class Orchestrator {
 
 	@Autowired
 	private BrokerService producer;
-
+	
 	class Process implements ListenableFutureCallback<Message> {
 
 		public boolean status;
@@ -53,22 +53,26 @@ public class Orchestrator {
 	}
 
 	@RabbitListener(queues = "Q1")
-	public Message reply(final Message msg) {
-
+	public Message reply(Message<BookingTicketDTO> msg) {
+		
+		
+		
 		boolean isFailed = false; // transaction status
 
 		if (msg.getCommand() == Message.COMMAND.BOOK_TICKET) {
 
-			LinkedHashMap ticketDto = (LinkedHashMap) msg.getContent();
-
+			BookingTicketDTO ticketDto = (BookingTicketDTO) msg.getContent();
+			
+			System.out.println("Received request: " + ticketDto);
+			
 			/*** EXECUTE BOOKING TICKET TRANSACTION ***/
 			Stack<Message> tasks = new Stack<Message>(); // to-do stack
 			Stack<Message> doneTasks = new Stack<Message>(); // roll-back stack
 			int totalTasks = 0;
 
 			// define tasks
-			Message task1 = new Message(ticketDto.get("roomId"), Message.COMMAND.RESERVE_SEAT, "room-route", true);
-			Message task2 = new Message(ticketDto, Message.COMMAND.MAKE_PAYMENT, "account-route", true);
+			Message task1 = new Message<Integer>(ticketDto.getRoomId(), Message.COMMAND.RESERVE_SEAT, "room-route");
+			Message task2 = new Message<BookingTicketDTO>(ticketDto, Message.COMMAND.MAKE_PAYMENT, "account-route");
 
 			// push tasks to to-do stack
 			tasks.push(task1);
@@ -124,7 +128,8 @@ public class Orchestrator {
 					}
 
 				} else {
-
+					
+					// sending command to other services
 					Message task = tasks.pop();
 
 					if (task.isAsync()) {
@@ -137,7 +142,11 @@ public class Orchestrator {
 
 					} else {
 
+						System.out.println("Task send: " + task.getId());
+						
 						Message result = producer.sendSync(task);
+						
+						System.out.println("Task done: " + result.getId());
 
 						if (result.isDone()) {
 							doneTasks.push(result);
@@ -149,6 +158,16 @@ public class Orchestrator {
 					}
 					// all tasks have been sent
 
+				}
+
+			}
+			//
+			if (isFailed) {
+
+				while (!doneTasks.isEmpty()) {
+					Message rollbackTask = doneTasks.pop();
+					rollbackTask.setRollbackCommand(rollbackTask.getCommand());
+					producer.sendAsync(rollbackTask);
 				}
 
 			}

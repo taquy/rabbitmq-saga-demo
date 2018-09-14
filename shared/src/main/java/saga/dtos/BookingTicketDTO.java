@@ -38,4 +38,9 @@ public class BookingTicketDTO {
 		this.ticketCost = ticketCost;
 	}
 
+	@Override
+	public String toString() {
+		return "BookingTicketDTO [userId=" + userId + ", roomId=" + roomId + ", ticketCost=" + ticketCost + "]";
+	}
+
 }

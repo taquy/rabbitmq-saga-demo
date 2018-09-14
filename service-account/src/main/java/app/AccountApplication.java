@@ -27,7 +27,7 @@ public class AccountApplication {
 			
 			// create dummy data
 			Account acc1 = new Account(1, 100);
-			Account acc2 = new Account(2, 50);
+			Account acc2 = new Account(2, 10);
 			accountRepo.save(acc1);
 			accountRepo.save(acc2);
 			

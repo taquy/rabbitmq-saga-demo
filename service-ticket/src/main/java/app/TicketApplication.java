@@ -34,14 +34,15 @@ public class TicketApplication {
 		
 		// construct message
 		BookingTicketDTO dto = new BookingTicketDTO(userId, roomId, ticketCost);
-		int cmd = Message.COMMAND.BOOK_TICKET;
-		Message msg = new Message(dto, cmd, rk);
+		Message<BookingTicketDTO> msg = new Message<BookingTicketDTO>(dto, Message.COMMAND.BOOK_TICKET, rk);
+		
 		
 		// send request - initiate transaction
-		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);
+		System.out.println("Start booking ticket transaction");
+		Message<BookingTicketDTO> rsl = (Message<BookingTicketDTO>) tpl.convertSendAndReceive(en, rk, msg);
 		
-		if (rsl.isDone()) return "success";
-		return "failed";
+		if (rsl == null || !rsl.isDone()) return "failed";
+		return "success";
 	}
 	
 }

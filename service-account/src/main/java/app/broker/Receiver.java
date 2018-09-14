@@ -18,9 +18,11 @@ public class Receiver {
 	private BudgetService budgetService;
 
 	@RabbitListener(queues = "#{queueB.name}")
-	public Message executor(Message msg) {
+	public Message<BookingTicketDTO> executor(Message<BookingTicketDTO> msg) {
 
 		if (msg.getCommand() == Message.COMMAND.MAKE_PAYMENT) {
+			
+			System.out.println("Received command: " + msg.getId());
 
 			BookingTicketDTO ticketDto = (BookingTicketDTO) msg.getContent();
 

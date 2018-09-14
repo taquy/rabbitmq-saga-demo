@@ -16,9 +16,11 @@ public class Receiver {
 	private RoomService roomService;
 
 	@RabbitListener(queues = "#{queueA.name}")
-	public Message executor(Message msg) {
+	public Message<Integer> executor(Message<Integer> msg) {
 
 		if (msg.getCommand() == Message.COMMAND.RESERVE_SEAT) {
+			
+			System.out.println("Received command: " + msg.getId());
 			
 			Integer roomId = (Integer) msg.getContent();
 
@@ -28,6 +30,9 @@ public class Receiver {
 			} catch (RoomNotFoundException | InsufficientSeatsException e) {
 				e.printStackTrace();
 			}
+			
+		} else if (msg.getCommand() == Message.COMMAND.RESERVE_SEAT_ROLLBACK) {
+			
 		}
 
 		return msg;
