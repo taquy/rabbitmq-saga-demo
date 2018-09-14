@@ -4,13 +4,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>saga.service.a</groupId>
-	<artifactId>saga.service.a</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>saga.booking.ticket</groupId>
+	<artifactId>service.room</artifactId>
+	<version>1</version>
 	<packaging>jar</packaging>
 
-	<name>service-a</name>
-	<description>saga.service.a</description>
+	<name>service.room</name>
+	<description>check remaining seats</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
