@@ -1,5 +1,7 @@
 package app.broker;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -17,26 +19,34 @@ public class Orchestrator {
 	private BrokerService producer;
 
 	class Process implements ListenableFutureCallback<Message> {
-		
+
 		public boolean status;
 		public Message result;
-		
-		public Process() {
+		public Stack<Message> doneTasks;
+
+		public Process(Stack<Message> doneTasks) {
+			this.doneTasks = doneTasks;
 			this.status = true;
 		}
 
 		@Override
 		public void onSuccess(Message result) {
-			this.result = result;
+
+			if (result.isDone()) {
+				this.doneTasks.push(result);
+			} else {
+				this.status = false;
+			}
+
 		}
 
 		@Override
 		public void onFailure(Throwable ex) {
 			this.status = false;
 		}
-		
+
 	}
-	
+
 	@RabbitListener(queues = "Q1")
 	public Message reply(final Message msg) {
 
@@ -60,68 +70,65 @@ public class Orchestrator {
 			tasks.push(task2);
 
 			totalTasks = tasks.size();
+			
+			// parallel processes pool - any task in this process failed will result in a transaction rollback
+			List<Process> processes = new ArrayList<Process>();
 
 			// start transaction execution thread
 			while (doneTasks.size() != totalTasks) {
-
-				Message task = tasks.pop();
-
-				if (task.isAsync()) {
+				
+				if (tasks.isEmpty()) {
 					
-					Message taskDone = null;
-					
-					producer.sendAsync(task).addCallback(new ListenableFutureCallback<Message>() {
-
-						@Override
-						public void onSuccess(Message result) {
-							taskDone = result;
-							doneTasks.push(result);
+					if (processes.size() > 0) {
+						
+						// continuously tracking asynchronous processes status, stop until no processes left to track
+						for (Process process : processes) {
+							if (process.status == false) isFailed = true;
+							processes.remove(process);
 						}
-
-						@Override
-						public void onFailure(Throwable ex) {
-							isFailed = true;
+						
+						continue;
+						
+					}
+					// all processes has been done
+						
+					// check transaction status, roll-back if failed
+					if (isFailed) {
+	
+						while (!doneTasks.isEmpty()) {
+							Message rollbackTask = doneTasks.pop();
+							rollbackTask.setRollbackCommand(rollbackTask.getCommand());
+							producer.sendAsync(rollbackTask);
 						}
-
-					});
-					
-					
-					
-				} else {
-
-					Message result = producer.sendSync(task);
-
-					if (result.isDone()) {
-						doneTasks.push(result);
-					} else {
-						isFailed = true;
+						
 						break;
 					}
-
-				}
-				// transaction over
-
-				// check transaction status, roll back if failed
-				if (isFailed) {
-
-					while (!doneTasks.isEmpty()) {
-						Message rollbackTask = doneTasks.pop();
-						rollbackTask.setRollbackCommand(rollbackTask.getCommand());
+				
+				} else {
+				
+					Message task = tasks.pop();
+	
+					if (task.isAsync()) {
+	
+						Process process = new Process(doneTasks);
 						
-						producer.sendAsync(rollbackTask).addCallback(new ListenableFutureCallback<Message>() {
-
-							@Override
-							public void onSuccess(Message result) {
-								System.out.println("Rollback success");
-							}
-
-							@Override
-							public void onFailure(Throwable ex) {
-								// ???
-							}
-
-						});
+						processes.add(process);
+	
+						producer.sendAsync(task).addCallback(process);
+	
+					} else {
+	
+						Message result = producer.sendSync(task);
+	
+						if (result.isDone()) {
+							doneTasks.push(result);
+						} else {
+							isFailed = true;
+							break;
+						}
+	
 					}
+					// all tasks have been sent
 					
 				}
 
