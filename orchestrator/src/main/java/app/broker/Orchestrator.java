@@ -67,7 +67,7 @@ public class Orchestrator {
 
 			// define tasks
 			Message task1 = new Message(ticketDto.getRoomId(), Message.COMMAND.RESERVE_SEAT, "room-route", true);
-			Message task2 = new Message(null, Message.COMMAND.MAKE_PAYMENT, "account-route", true);
+			Message task2 = new Message(ticketDto, Message.COMMAND.MAKE_PAYMENT, "account-route", true);
 
 			// push tasks to to-do stack
 			tasks.push(task1);

@@ -15,7 +15,7 @@ public class BudgetService {
 	@Autowired
 	AccountRepository accountRepo;
 
-	public boolean hasEnoughBudget(int userId, int cost) throws AccountNotFoundException {
+	public boolean hasEnoughBudget(int userId, double cost) throws AccountNotFoundException {
 
 		if (!accountRepo.existsByUserId(userId))
 			throw new AccountNotFoundException();
@@ -25,7 +25,7 @@ public class BudgetService {
 		return account.getDeposit() > cost;
 	}
 
-	public void withdrawn(int userId, int amount) throws AccountNotFoundException, InsufficientBudgetException {
+	public void withdrawn(int userId, double amount) throws AccountNotFoundException, InsufficientBudgetException {
 
 		if (!hasEnoughBudget(userId, amount))
 			throw new InsufficientBudgetException();

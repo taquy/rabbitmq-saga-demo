@@ -19,6 +19,7 @@ public class Receiver {
 	public Message executor(Message msg) {
 
 		if (msg.getCommand() == Message.COMMAND.RESERVE_SEAT) {
+			
 			Integer roomId = (Integer) msg.getContent();
 
 			try {
