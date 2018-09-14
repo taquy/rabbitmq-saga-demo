@@ -1,81 +1,62 @@
 package saga.shared;
 
+import java.util.UUID;
+
 public final class Message {
-	private long id;
-	private String from;
-	private String to;
-	private String message;
+	private String id;
+	private Object content;
+	private int command;
 	private String route;
-	private boolean status;
 	private boolean isAsync;
+	private boolean isDone;
 
-	public Message(String from, String to, String message) {
-		this.from = from;
-		this.to = to;
-		this.message = message;
-		this.status = false;
-		this.isAsync = false;
+	public static final class COMMAND {
+		public static final int BOOK_TICKET = 0;
+		public static final int RESERVE_SEAT = 1;
+		public static final int MAKE_PAYMENT = 2;
 	}
 
-	public Message(String from, String to, String message, String route) {
-		this.from = from;
-		this.to = to;
-		this.message = message;
-		this.route = route;
-		this.status = false;
-		this.isAsync = false;
-	}
+	public Message(Object content, int command, String route) {
+		this.id = genId();
 
-	public Message(String from, String to, String message, String route, boolean isAsync) {
-		this.from = from;
-		this.to = to;
-		this.message = message;
+		this.content = content;
+		this.command = command;
 		this.route = route;
-		this.status = false;
+		
+		this.isAsync = false;
+		this.isDone = false;
+	}
+	
+	public Message(Object content, int command, String route, boolean isAsync) {
+		this.id = genId();
+
+		this.content = content;
+		this.command = command;
+		this.route = route;
 		this.isAsync = isAsync;
+
+		this.isDone = false;
+
 	}
 
-	public Message() {
+	public String genId() {
+		return UUID.randomUUID().toString();
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getFrom() {
-		return from;
+	public Object getContent() {
+		return content;
 	}
 
-	public void setFrom(String from) {
-		this.from = from;
-	}
-
-	public String getTo() {
-		return to;
-	}
-
-	public void setTo(String to) {
-		this.to = to;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public boolean isStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
+	public void setContent(Object content) {
+		this.content = content;
 	}
 
 	public String getRoute() {
@@ -86,6 +67,14 @@ public final class Message {
 		this.route = route;
 	}
 
+	public boolean isDone() {
+		return isDone;
+	}
+
+	public void setDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
 	public boolean isAsync() {
 		return isAsync;
 	}
@@ -94,9 +83,12 @@ public final class Message {
 		this.isAsync = isAsync;
 	}
 
-	@Override
-	public String toString() {
-		return "Message [from=" + from + ", to=" + to + ", message=" + message + ", route=" + route + ", status="
-				+ status + "]";
+	public int getCommand() {
+		return command;
 	}
+
+	public void setCommand(int command) {
+		this.command = command;
+	}
+
 }
