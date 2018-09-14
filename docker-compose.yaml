@@ -13,44 +13,91 @@ services:
     networks:
       - saga-2-net
 
-  service_main:
-    image: saga-2-service-main
-    depends_on:
-      - rabbitmq
-    ports:
-      - 8090:8090
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-    networks: [saga-2-net]
-
   service_orchestrator:
     image: saga-2-orchestrator
     depends_on:
       - rabbitmq
-      - service_main
+      - service_ticket
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     networks: [saga-2-net]
 
-  service_a:
-    image: saga-2-service-a
+
+
+
+
+  service_ticket:
+    image: saga-2-service-ticket
     depends_on:
       - rabbitmq
-      - service_orchestrator
+      - database_ticket
+    ports:
+      - 8090:8090
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-    networks: [saga-2-net]
+    networks: [saga-2-net, service-ticket-net]
+  
+  database_ticket:
+    container_name: db_ticket
+    restart: always
+    image: mysql:5
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ticket
+      MYSQL_ROOT_PASSWORD: 123123
+    networks: [service-ticket-net]
 
-  service_b:
-    image: saga-2-service-b
+  
+
+  service_room:
+    image: saga-2-service-room
     depends_on:
       - rabbitmq
       - service_orchestrator
+      - database_room
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks: [saga-2-net, service-room-net]
+
+  database_room:
+    container_name: db_room
+    restart: always
+    image: mysql:5
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: room
+      MYSQL_ROOT_PASSWORD: 123123
+    networks: [service-room-net]
+
+
+  service_account:
+    image: saga-2-service-account
+    depends_on:
+      - rabbitmq
+      - service_orchestrator
+      - database_account
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-    networks: [saga-2-net]
+    networks: [saga-2-net, service-account-net]
+
+  database_account:
+    container_name: db_account
+    restart: always
+    image: mysql:5
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: account
+      MYSQL_ROOT_PASSWORD: 123123
+    networks: [service-account-net]
+
 
 networks:
   saga-2-net:
+    driver: bridge
+  service-ticket-net:
+    driver: bridge
+  service-room-net:
+    driver: bridge
+  service-account-net:
     driver: bridge
 
