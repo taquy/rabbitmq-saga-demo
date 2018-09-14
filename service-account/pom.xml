@@ -87,7 +87,7 @@
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.0</version>
 				<configuration>
-					<repository>saga-2-service-b</repository>
+					<repository>saga-2-service-account</repository>
 					<tag>latest</tag>
 				</configuration>
 				<executions>

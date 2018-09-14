@@ -29,11 +29,11 @@ public class Room {
 	}
 
 	public int getId() {
-		return id;
+		return roomId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setId(int roomId) {
+		this.roomId = roomId;
 	}
 
 	public int getSeatsAvailable() {
