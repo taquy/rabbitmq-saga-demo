@@ -21,8 +21,7 @@ public class BudgetService {
 			throw new AccountNotFoundException();
 
 		Account account = accountRepo.findByUserId(userId);
-
-		return account.getDeposit() > cost;
+		return account.getDeposit() >= cost;
 	}
 
 	public void withdrawn(int userId, double amount) throws AccountNotFoundException, InsufficientBudgetException {

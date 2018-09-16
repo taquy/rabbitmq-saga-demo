@@ -12,6 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.broker.BrokerConfig;
+import app.entities.Ticket;
+import app.repositories.TicketRepository;
 import saga.core.Message;
 import saga.dtos.BookingTicketDTO;
 
@@ -26,6 +28,9 @@ public class TicketApplication {
 	// controller
 	@Autowired
 	private RabbitTemplate tpl;
+	
+	@Autowired
+	private TicketRepository ticketRepo;
 
 	@PostMapping
 	public String bookingTicket(@RequestParam("user_id") int userId, @RequestParam("room_id") int roomId) {
@@ -51,6 +56,10 @@ public class TicketApplication {
 		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);
 		
 		if (rsl == null || !rsl.isDone()) return "failed";
+		
+		Ticket ticket = new Ticket(userId, roomId);
+		ticketRepo.save(ticket);
+		
 		return "success";
 		
 	}
