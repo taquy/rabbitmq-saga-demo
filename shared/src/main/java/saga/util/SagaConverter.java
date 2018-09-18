@@ -1,4 +1,4 @@
-package saga.core;
+package saga.util;
 
 import java.io.IOException;
 

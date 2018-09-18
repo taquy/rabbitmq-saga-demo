@@ -10,8 +10,8 @@ import app.exceptions.InsufficientSeatsException;
 import app.exceptions.RoomNotFoundException;
 import app.services.RoomService;
 import saga.core.Message;
-import saga.core.SagaConverter;
 import saga.dtos.BookingTicketDTO;
+import saga.util.SagaConverter;
 
 @Service
 public class Receiver {

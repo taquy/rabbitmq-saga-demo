@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.broker.BrokerConfig;
 import app.entities.Ticket;
 import app.repositories.TicketRepository;
 import saga.core.Message;
 import saga.dtos.BookingTicketDTO;
+import saga.util.SagaConverter;
 
 @SpringBootApplication
 @RestController
@@ -24,11 +24,11 @@ public class TicketApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TicketApplication.class, args);
 	}
-	
+
 	// controller
 	@Autowired
 	private RabbitTemplate tpl;
-	
+
 	@Autowired
 	private TicketRepository ticketRepo;
 
@@ -36,32 +36,33 @@ public class TicketApplication {
 	public String bookingTicket(@RequestParam("user_id") int userId, @RequestParam("room_id") int roomId) {
 		String rk = BrokerConfig.r1; // route key
 		String en = BrokerConfig.e1; // router name
-		
+
 		// default ticket cost for demo
 		double ticketCost = 10;
-		
+
 		// construct message
 		BookingTicketDTO dto = new BookingTicketDTO(userId, roomId, ticketCost);
-		ObjectMapper objectMapper = new ObjectMapper();
-		String content;
-		
+		String content = null;
+
 		try {
-			content = objectMapper.writeValueAsString(dto);
+			content = SagaConverter.encode(dto);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return "failed";
 		}
-		
+
 		Message msg = new Message(content, Message.COMMAND.BOOK_TICKET, rk);
-		Message rsl = (Message) tpl.convertSendAndReceive(en, rk, msg);
-		
-		if (rsl == null || !rsl.isDone()) return "failed";
-		
+		Message result = (Message) tpl.convertSendAndReceive(en, rk, msg);
+
+		if (result == null || !result.isDone())
+			return "failed";
+
+		// process other logic if necessary
 		Ticket ticket = new Ticket(userId, roomId);
 		ticketRepo.save(ticket);
-		
+
 		return "success";
-		
+
 	}
-	
+
 }

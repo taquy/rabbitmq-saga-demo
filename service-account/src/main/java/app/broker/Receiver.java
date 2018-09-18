@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import app.exceptions.InsufficientBudgetException;
 import app.services.BudgetService;
 import saga.core.Message;
-import saga.core.SagaConverter;
 import saga.dtos.BookingTicketDTO;
+import saga.util.SagaConverter;
 
 @Service
 public class Receiver {
