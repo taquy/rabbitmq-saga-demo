@@ -1,4 +1,4 @@
-package app.broker;
+package saga.services;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,7 +61,6 @@ public class BrokerService {
 			this.result = null;
 		}
 
-		@Override
 		public void onSuccess(Message result) {
 
 			this.result = result;
@@ -74,7 +73,6 @@ public class BrokerService {
 
 		}
 
-		@Override
 		public void onFailure(Throwable ex) {
 			this.status = false;
 		}
