@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: taquy
+Build-Jdk: 10.0.2
+Implementation-Title: service.ticket
+Implementation-Version: 1
+Implementation-Vendor-Id: saga.booking.ticket
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/service.ticket
+Created-By: Maven Integration for Eclipse
+
