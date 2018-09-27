@@ -1,0 +1,4 @@
+app/broker/BrokerConfig.class
+app/entities/Ticket.class
+app/TicketApplication.class
+app/repositories/TicketRepository.class

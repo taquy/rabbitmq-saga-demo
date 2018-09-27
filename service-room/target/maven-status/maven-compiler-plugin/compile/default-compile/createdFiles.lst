@@ -1,0 +1,5 @@
+app/broker/BrokerConfig.class
+app/entities/Room.class
+app/RoomApplication.class
+app/broker/Receiver.class
+app/repositories/RoomRepository.class
